@@ -10,6 +10,7 @@ SUDOKU_HEIGHT = 600
 
 FPS = 60
 
+BLUE = (0, 145, 255)
 WHITE = (255,255,255)
 BLACK = (0,0,0)
 RED = (255,0,0)
@@ -118,7 +119,7 @@ def drawWindow(board, highlight_location):
 
     for box in boxes: #draw boxes
         if find_box((box.x, box.y)) == highlight_location:
-            pygame.draw.rect(WIN, RED, box, 1)
+            pygame.draw.rect(WIN, BLUE, box, 1)
         else:
             pygame.draw.rect(WIN, BLACK, box, 1)
 
@@ -165,15 +166,9 @@ def main():
                 pygame.quit()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if CLEAR_BUTTON.x <= mouse[0] <= (CLEAR_BUTTON.x+CLEAR_BUTTON.width) and CLEAR_BUTTON.y <= mouse[1] <= (CLEAR_BUTTON.y+CLEAR_BUTTON.height):
-                    board = [[3, 0, 6, 5, 0, 8, 4, 0, 0],
-                        [5, 2, 0, 0, 0, 0, 0, 0, 0],
-                        [0, 8, 7, 0, 0, 0, 0, 3, 1],
-                        [0, 0, 3, 0, 1, 0, 0, 8, 0],
-                        [9, 0, 0, 8, 6, 3, 0, 0, 5],
-                        [0, 5, 0, 0, 9, 0, 6, 0, 0],
-                        [1, 3, 0, 0, 0, 0, 2, 5, 0],
-                        [0, 0, 0, 0, 0, 0, 0, 7, 4],
-                        [0, 0, 5, 2, 0, 6, 3, 0, 0]]
+                    for a in range(0,9): #generating the grid
+                        for b in range(0,9):
+                            board[a][b] = 0
 
             if event.type == pygame.KEYDOWN and highlight_location != (9,9):
                 if event.key == pygame.K_1:
@@ -194,6 +189,10 @@ def main():
                     update_board(board, highlight_location, 8)
                 elif event.key == pygame.K_9:
                     update_board(board, highlight_location, 9)
+                elif event.key == pygame.K_0:
+                    update_board(board, highlight_location, 0)
+                elif event.key == pygame.K_ESCAPE:
+                    highlight_location = (9,9)
 
             if event.type == pygame.MOUSEBUTTONDOWN: #solve
                 if SOLVE_BUTTON.x <= mouse[0] <= (SOLVE_BUTTON.x+SOLVE_BUTTON.width) and SOLVE_BUTTON.y <= mouse[1] <= (SOLVE_BUTTON.y+SOLVE_BUTTON.height):
