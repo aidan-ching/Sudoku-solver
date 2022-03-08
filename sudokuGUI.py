@@ -1,6 +1,6 @@
-from tkinter import Button
-from turtle import clear
 import pygame
+
+pygame.init()
 
 pygame.font.init()
 
@@ -161,16 +161,13 @@ def main():
     while run:
         clock.tick(FPS)
         mouse = pygame.mouse.get_pos()
+        drawWindow(board, highlight_location)
+        
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                if CLEAR_BUTTON.x <= mouse[0] <= (CLEAR_BUTTON.x+CLEAR_BUTTON.width) and CLEAR_BUTTON.y <= mouse[1] <= (CLEAR_BUTTON.y+CLEAR_BUTTON.height):
-                    for a in range(0,9): #generating the grid
-                        for b in range(0,9):
-                            board[a][b] = 0
-
-            if event.type == pygame.KEYDOWN and highlight_location != (9,9):
+                break
+            elif event.type == pygame.KEYDOWN and highlight_location != (9,9):
                 if event.key == pygame.K_1:
                     update_board(board, highlight_location, 1)
                 elif event.key == pygame.K_2:
@@ -189,23 +186,22 @@ def main():
                     update_board(board, highlight_location, 8)
                 elif event.key == pygame.K_9:
                     update_board(board, highlight_location, 9)
-                elif event.key == pygame.K_0:
+                elif event.key == pygame.K_0 or event.key == pygame.K_BACKSPACE:
                     update_board(board, highlight_location, 0)
                 elif event.key == pygame.K_ESCAPE:
                     highlight_location = (9,9)
-
-            if event.type == pygame.MOUSEBUTTONDOWN: #solve
-                if SOLVE_BUTTON.x <= mouse[0] <= (SOLVE_BUTTON.x+SOLVE_BUTTON.width) and SOLVE_BUTTON.y <= mouse[1] <= (SOLVE_BUTTON.y+SOLVE_BUTTON.height):
+            elif event.type == pygame.MOUSEBUTTONDOWN: #solve
+                if CLEAR_BUTTON.x <= mouse[0] <= (CLEAR_BUTTON.x+CLEAR_BUTTON.width) and CLEAR_BUTTON.y <= mouse[1] <= (CLEAR_BUTTON.y+CLEAR_BUTTON.height): # clear grid
+                    for a in range(0,9): #generating the grid
+                        for b in range(0,9):
+                            board[a][b] = 0
+                if SOLVE_BUTTON.x <= mouse[0] <= (SOLVE_BUTTON.x+SOLVE_BUTTON.width) and SOLVE_BUTTON.y <= mouse[1] <= (SOLVE_BUTTON.y+SOLVE_BUTTON.height): #solve button
                     solve(board)
                 if 0 <= mouse[0] <= WIDTH and 0 <= mouse[1] <= SUDOKU_HEIGHT: #highlighting a box selection
                     highlight_location = find_box(mouse)
                 else:
                     highlight_location = (9,9)
-
-    
-        drawWindow(board, highlight_location)
-
-    main()
+        
 
 if __name__ == "__main__":
     main()
